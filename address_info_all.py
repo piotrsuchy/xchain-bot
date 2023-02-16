@@ -41,7 +41,6 @@ with open('csv_files/issuances_df.csv', 'w', newline='') as csvfile:
             if element['asset'] not in assets_written:
                 # Write the current element to the CSV file
                 writer.writerow([element['asset'], element['asset_longname'], element['issuer'], element['quantity'], element['source']])
-
                 # Add the current asset to the set of assets that have been written to the CSV file
                 assets_written.add(element['asset'])
 
