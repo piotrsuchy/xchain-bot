@@ -2,10 +2,12 @@ import csv
 import requests as rq
 import pandas as pd
 from datetime import datetime
+import os
 
 # Initial script that goes through every asset from csv/files/issuances_df.csv and checks their 
 # dispenses and writes it down to a csv file converting the timestamp to human format
 
+# get issuances from an address
 def get_address_assets_info(address):
     # Set the API endpoint URL
     endpoint_address = 'https://xchain.io/api/issuances/'
@@ -13,7 +15,7 @@ def get_address_assets_info(address):
     assets_written = set()
 
     # Open a file for writing and create a CSV writer
-    with open('csv_files/issuances_df.csv', 'w', newline='') as csvfile:
+    with open(f'csv_files/issuances_{address}.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         # Write the header row
         writer.writerow(['asset', 'asset_longname', 'issuer', 'quantity', 'source'])
@@ -45,18 +47,20 @@ def get_address_assets_info(address):
             else:
                 # Set the flag to indicate that there are no more pages of data to retrieve
                 more_pages = False
-            
-            
-def get_dispenses_from_assets(assets):
+
+
+# based on a list of assets get dispenses from that assets
+def get_dispenses_from_assets(address, assets, formatted_timestamp):
     # Set the field names for the CSV file
     fields = ['address', 'asset', 'block_index', 'btc_amount', 'dispenser', 'quantity', 'timestamp']
 
     # Open the file in write mode
-    with open('csv_files/asset_disp.csv', 'w', newline='') as csvfile:
+    with open(f'csv_files/asset_dispenses_{address}.csv', 'w', newline='') as csvfile:
         # Create a csv.writer instance
         writer = csv.writer(csvfile)
         
         # Write the header row
+        csvfile.write(f"# Last update: {formatted_timestamp}")
         writer.writerow(fields)
         
         # Iterate over the assets in assets
@@ -77,15 +81,23 @@ def get_dispenses_from_assets(assets):
                 # writer.writerow(timestamp_formatted.strftime("%Y-%m-%d %H:%M:%S"))
             
                 
-# filtering by timestamp of dispense:
-def clean_dispenses_csv():
-    df = pd.read_csv('csv_files/asset_disp.csv')
+# filtering the dataframe of dispenses by timestamp of dispense:
+def clean_dispenses_csv(address, formatted_timestamp):
+    df = pd.read_csv(f'csv_files/asset_dispenses_{address}.csv', comment='#')
     df.columns = ['address', 'asset', 'block_index', 'btc_amount', 'dispenser', 'quantity', 'timestamp']
     df = df.sort_values(by=['timestamp'], ascending=False)
-    df.to_csv('csv_files/asset_disp.csv')
+    df.to_csv(f'csv_files/asset_dispenses_{address}.csv')
+    # # Open the original CSV file and create a new temporary file
+    # with open('original.csv', 'r') as csv_file, open('temp.csv', 'w', newline='') as temp_file:
+    #     # Write the comment line to the temporary file
+    #     temp_file.write('# Last update: {}\n'.format(formatted_timestamp))
+    #     # Append the original CSV data to the temporary file
+    #     temp_file.write(csv_file.read())
+    # # Replace the original CSV file with the temporary file
+    # os.replace('temp.csv', 'original.csv')
     
-
-def scrape_dispenses(asset_array, timestamp):
+# scraping until the moment of the timestamp by global dispenses, not by asset dispenses
+def scrape_dispenses(address, asset_array, timestamp):
     fields = ['address', 'asset', 'block_index', 'btc_amount', 'dispenser', 'quantity', 'timestamp']
     
     # options for the url to add pagination
@@ -113,28 +125,34 @@ def scrape_dispenses(asset_array, timestamp):
         if flag == 1:
             break
     df = pd.DataFrame(matrix_of_values, columns=fields)
-    old_df = pd.read_csv('csv_files/updated_asset_disp.csv')
+    old_df = pd.read_csv(f'csv_files/asset_dispenses_{address}.csv')
     final_df = pd.concat([df, old_df]).drop_duplicates(subset=df.columns, keep=False, ignore_index=True)
 
-    final_df.to_csv('csv_files/updated_asset_disp.csv', index=False)
+    final_df.to_csv(f'csv_files/asset_dispenses_{address}.csv', index=False)
     
     
 def main():
-    # reading 
-    df = pd.read_csv('csv_files/issuances_df.csv')
-    asset_array = df['asset'].to_numpy()
-    address_to_scrape = '1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX'
-    timestamp_1 = '2023-02-04 21:57:21'
-    datetime_obj = datetime.strptime(timestamp_1, '%Y-%m-%d %H:%M:%S')
-    unix_timestamp = datetime_obj.timestamp()
+    address_to_scrape = input("Paste an address to scrape: ")
+    
+    # timestamps in both formats:
+    current_time = datetime.now()
+    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    unix_timestamp = datetime.now().timestamp()
+    
+    # dataframe from a csv_file that is later used to get an array of assets created by that address
+    df_of_issuances = pd.read_csv(f'csv_files/issuances_{address_to_scrape}.csv')
+    asset_array = df_of_issuances['asset'].to_numpy()
+    
     # flag to get first data from assets if the .csv files are not there:
-    initialized = 0
-    if not initialized:
+    initialized = input("Already scraped this address - press '1' or first time scraping this address - press 0:")
+    if not int(initialized):
+        # creating a issuances_{address}.csv
         get_address_assets_info(address_to_scrape)
-        get_dispenses_from_assets(asset_array)
-        clean_dispenses_csv()
+        # getting dispenses from assets one by one
+        get_dispenses_from_assets(address_to_scrape, asset_array, formatted_time)
+        clean_dispenses_csv(address_to_scrape)
     else:
-        scrape_dispenses(asset_array, unix_timestamp)
+        scrape_dispenses(address_to_scrape, asset_array, unix_timestamp)
 
     # the code above takes a lot of time, so if i run this program every day or so,
     # it's better to get next data straight from url endpoint of api/dispenses/ until
