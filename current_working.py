@@ -139,19 +139,21 @@ def main():
     formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     unix_timestamp = datetime.now().timestamp()
     
-    # dataframe from a csv_file that is later used to get an array of assets created by that address
-    df_of_issuances = pd.read_csv(f'csv_files/issuances_{address_to_scrape}.csv')
-    asset_array = df_of_issuances['asset'].to_numpy()
-    
     # flag to get first data from assets if the .csv files are not there:
     initialized = input("Already scraped this address - press '1' or first time scraping this address - press 0:")
     if not int(initialized):
         # creating a issuances_{address}.csv
         get_address_assets_info(address_to_scrape)
+        # dataframe from a csv_file that is later used to get an array of assets created by that address
+        df_of_issuances = pd.read_csv(f'csv_files/issuances_{address_to_scrape}.csv')
+        asset_array = df_of_issuances['asset'].to_numpy()
         # getting dispenses from assets one by one
         get_dispenses_from_assets(address_to_scrape, asset_array, formatted_time)
-        clean_dispenses_csv(address_to_scrape)
+        clean_dispenses_csv(address_to_scrape, formatted_time)
     else:
+        # dataframe from a csv_file that is later used to get an array of assets created by that address
+        df_of_issuances = pd.read_csv(f'csv_files/issuances_{address_to_scrape}.csv')
+        asset_array = df_of_issuances['asset'].to_numpy()
         scrape_dispenses(address_to_scrape, asset_array, unix_timestamp)
 
     # the code above takes a lot of time, so if i run this program every day or so,
