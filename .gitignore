@@ -1,2 +1,6 @@
 .DS_Store
 csv_files/
+input_txt
+test.py
+src/__pycache__
+TODO.md
