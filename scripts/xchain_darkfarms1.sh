@@ -7,13 +7,13 @@
 cd ~/Desktop/Programming/PROGRAMMING_PRACTICE/XCHAIN_BOT
 
 # Set the fixed values for the input
-input="1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX"
-second_input="0"
+address="1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX"
+initialized_flag="0"
 
-echo "$input" > input.txt
-echo "$second_input" >> input.txt
+echo "$address" > input.txt
+echo "$initialized_flag" >> input.txt
 
-python current_working.py < input.txt
+python main.py < input.txt
 
 cd csv_files
 column -s, -t < asset_dispenses_1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX.csv | less -N -S

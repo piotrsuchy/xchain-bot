@@ -11,7 +11,7 @@ echo $address > input.txt
 read -p "Press '1' if already scraped this address or '0' for first time scraping: " initialized_flag
 echo $initialized_flag >> input.txt
 
-python current_working.py < input.txt
+python main.py < input.txt
 
 cd csv_files
 csv_file="asset_dispenses_${address}.csv"
