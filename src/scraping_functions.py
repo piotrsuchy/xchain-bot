@@ -145,5 +145,6 @@ def scrape_dispenses(address, asset_array, timestamp):
     final_df = pd.concat([df, old_df]).drop_duplicates(subset=df.columns,
                                                        keep=False,
                                                        ignore_index=True)
-
+    final_df = final_df.drop(columns="Unnamed: 0")
+    
     final_df.to_csv(f'csv_files/asset_dispenses_{address}.csv', index=False)
