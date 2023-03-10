@@ -2,8 +2,10 @@
 # bash script that runs the python program and later displays the 
 # csv file of the scraped address with a column command
 
-# change the cd ~/* command to your path to the project folder 
-cd ~/Desktop/Programming/PROGRAMMING_PRACTICE/XCHAIN_BOT
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+cd $SCRIPT_DIR
+cd ..
 
 read -p "Enter address to scrape: " address
 echo $address > input.txt

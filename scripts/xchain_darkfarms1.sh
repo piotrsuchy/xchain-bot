@@ -2,12 +2,16 @@
 # The script for checking Darkfarms1's (my favourite cryptoartist) xchain address
 
 # change the flag "second_input" to 1 after first run of the script
-# change the path to project's folder for the script to work 
 
 # setting a variable to print input prompts only when running not through console
 export RUNNING_THROUGH_BASH_SCRIPT=1
 
-cd ~/Desktop/Programming/PROGRAMMING_PRACTICE/XCHAIN_BOT
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# echo "$SCRIPT_DIR"
+
+cd $SCRIPT_DIR
+cd ..
 
 # Set the fixed values for the input
 address="1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX"
