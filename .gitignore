@@ -1,6 +1,6 @@
 .DS_Store
 csv_files/
-input_txt
+input_from_script.txt
 test.py
 src/__pycache__
 TODO.md
