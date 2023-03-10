@@ -2,6 +2,7 @@ import requests as rq
 import pandas as pd
 from datetime import datetime
 from src.scraping_functions import get_address_assets_info, get_dispenses_from_assets, clean_dispenses_csv, scrape_dispenses
+import os
 
 '''
 Initial script that goes through every asset from csv/files/issuances_df.csv and checks their
@@ -12,17 +13,26 @@ check for assets from the address given until the last timestamp is reached
 
 
 def main():
-    address_to_scrape = input("Paste an address to scrape: ")
-
+    if os.environ.get('RUNNING_THROUGH_BASH_SCRIPT'):
+        PRINT_ENABLED = False
+    else:
+        PRINT_ENABLED = True
+    
+    if PRINT_ENABLED:
+        address_to_scrape = input("Paste an address to scrape: ")
+        # flag to get first data from assets if the .csv files are not there:
+        initialized = input(
+            "Already scraped this address - press '1' or first time scraping this address - press 0: "
+        )
+    else:
+        address_to_scrape = input()
+        initialized = input()
+    
     # timestamps in both formats:
     current_time = datetime.now()
     formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     unix_timestamp = datetime.now().timestamp()
-
-    # flag to get first data from assets if the .csv files are not there:
-    initialized = input(
-        "Already scraped this address - press '1' or first time scraping this address - press 0:"
-    )
+    
     if not int(initialized):
         # creating a issuances_{address}.csv
         get_address_assets_info(address_to_scrape)
