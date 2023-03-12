@@ -17,10 +17,10 @@ cd ..
 address="1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX"
 initialized_flag="1"
 
-echo "$address" > input.txt
-echo "$initialized_flag" >> input.txt
+echo "$address" > input_from_script.txt
+echo "$initialized_flag" >> input_from_script.txt
 
-python main.py < input.txt
+python main.py < input_from_script.txt
 
 cd csv_files
 column -s, -t < asset_dispenses_1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX.csv | less -N -S
