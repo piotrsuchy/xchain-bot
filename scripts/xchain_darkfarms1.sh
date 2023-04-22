@@ -8,8 +8,6 @@ export RUNNING_THROUGH_BASH_SCRIPT=1
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# echo "$SCRIPT_DIR"
-
 cd $SCRIPT_DIR
 cd ..
 
@@ -19,6 +17,11 @@ initialized_flag="1"
 
 echo "$address" > input_from_script.txt
 echo "$initialized_flag" >> input_from_script.txt
+
+echo Scraping address 1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX
+echo With the the initialized flag equal to $initialized_flag. 
+echo Please wait: 
+echo
 
 python main.py < input_from_script.txt
 
