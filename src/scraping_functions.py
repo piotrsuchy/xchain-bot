@@ -6,9 +6,7 @@ from datetime import datetime
 
 # get issuances from an address
 def get_address_assets_info(address):
-    # Set the API endpoint URL
     endpoint_address = 'https://xchain.io/api/issuances/'
-    # Create a set to store the assets that have already been written to the CSV file
     assets_written = set()
 
     # Open a file for writing and create a CSV writer
@@ -23,19 +21,14 @@ def get_address_assets_info(address):
         page_size = 100
         # Set a flag to indicate whether there are more pages of data to retrieve
         more_pages = True
-        # Iterate over the pages of data
         while more_pages:
-            # Construct the URL for the current page
             url = f'{endpoint_address}{address}?page={page}&page_size={page_size}'
             # Make the request to the API
             response = rq.get(url)
-            # Parse the JSON data
             data = response.json()
-            # Iterate over the elements in the data list
             for element in data['data']:
                 # Check if the current asset has already been written to the CSV file
                 if element['asset'] not in assets_written:
-                    # Write the current element to the CSV file
                     writer.writerow([
                         element['asset'], element['asset_longname'],
                         element['issuer'], element['quantity'],
@@ -54,13 +47,11 @@ def get_address_assets_info(address):
 
 # based on a list of assets get dispenses from that assets
 def get_dispenses_from_assets(address, assets, formatted_timestamp):
-    # Set the field names for the CSV file
     fields = [
         'address', 'asset', 'block_index', 'btc_amount', 'dispenser',
         'quantity', 'timestamp'
     ]
 
-    # Open the file in write mode
     with open(f'csv_files/asset_dispenses_{address}.csv', 'w',
               newline='') as csvfile:
         # Create a csv.writer instance
@@ -70,7 +61,6 @@ def get_dispenses_from_assets(address, assets, formatted_timestamp):
         csvfile.write(f"# Last update: {formatted_timestamp}")
         writer.writerow(fields)
 
-        # Iterate over the assets in assets
         for asset in assets:
             url = 'https://xchain.io/api/dispenses/{0}'.format(asset)
 
@@ -82,8 +72,7 @@ def get_dispenses_from_assets(address, assets, formatted_timestamp):
             # Iterate over the items in new_data
             for item in new_data:
                 timestamp_formatted = datetime.fromtimestamp(item['timestamp'])
-
-                # Write each item to the file as a separate row
+                
                 writer.writerow(
                     [item[field] for field in fields[0:-1]] +
                     [timestamp_formatted.strftime("%Y-%m-%d %H:%M:%S")])
