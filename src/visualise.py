@@ -5,8 +5,6 @@ import matplotlib.ticker as ticker
 import os
 import mplcursors
 
-# TODO: take into account multiple dispenses and divide the btc amount by dispenses
-
 def format_tooltip(sel):
     sel.annotation.set_text(f'Timestamp: {mdates.num2date(sel.target[0]).strftime("%Y-%m-%d %H:%M:%S")}\nBTC Amount: {sel.target[1]:.5f}')
 
@@ -25,13 +23,26 @@ else:
 
     # Filter the data based on the 'asset' column
     filtered_data = data[data['asset'] == asset_name]
-    
+
     if filtered_data.empty:
         print("This asset was not created by that address, or hasn't had any dispenses yet!")
     else:
+        # Filter the data based on the 'asset' column
+        filtered_data = data[data['asset'] == asset_name].copy()
+
+        # Calculate the unit BTC amount before expanding the DataFrame
+        filtered_data['unit_btc_amount'] = filtered_data['btc_amount'] / filtered_data['quantity']
+
+        # Expand the DataFrame based on the 'quantity' value
+        expanded_data = filtered_data.loc[filtered_data.index.repeat(filtered_data['quantity'])].reset_index(drop=True)
+
+        # Update the 'btc_amount' and 'quantity' columns
+        expanded_data['btc_amount'] = expanded_data['unit_btc_amount']
+        expanded_data['quantity'] = 1
+        
         # Plot the graph
         fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(filtered_data['timestamp'], filtered_data['btc_amount'], marker='o', linestyle='-', label=asset_name)
+        ax.plot(expanded_data['timestamp'], expanded_data['btc_amount'], marker='o', linestyle='-', label=asset_name)
 
         # Format the X-axis with only the first and last date
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
@@ -40,8 +51,8 @@ else:
 
         # Set labels and title
         plt.xlabel('Timestamp')
-        plt.ylabel('BTC Amount')
-        plt.title('BTC Amount for {}'.format(asset_name))
+        plt.ylabel('Unit BTC Amount')
+        plt.title('Unit BTC Amount for {}'.format(asset_name))
 
         # Add a legend
         plt.legend()
