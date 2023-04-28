@@ -42,7 +42,7 @@ else:
         
         # Plot the graph
         fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(expanded_data['timestamp'], expanded_data['btc_amount'], marker='o', linestyle='-', label=asset_name)
+        ax.plot(expanded_data['timestamp'], expanded_data['btc_amount'], marker='o', markersize=8, linestyle='-', linewidth=1, label=asset_name)
 
         # Format the X-axis with only the first and last date
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
