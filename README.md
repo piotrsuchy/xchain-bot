@@ -22,10 +22,16 @@ chmod u+x xchain_insert_address.sh
 
 As you can see we get the information about dispenses in a nice format (actually a .csv file).
 
+## Visualise
+
+I also added a module that lets you plot data about a specific asset. That includes BTC amount paid for an asset and the time of the dispense. There is some stuff to fix with the visualisation, but for now it looks as follows:
+![output for plot](media/output_vis.png)
+
 ## TODO
 
-- visualisation of data that based on asset name generates the chart of price over time
 - counting of aggregates like total price, mean price etc. of created assets by the address
+- fix sometimes disappearing dispenses
+- formatting of csv and cursor options for visualise
 
 ## Useful links to get more information about the blockchain and XCP
 
