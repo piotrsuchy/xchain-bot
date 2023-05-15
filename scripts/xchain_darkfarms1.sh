@@ -18,7 +18,7 @@ initialized_flag="1"
 echo "$address" > input_from_script.txt
 echo "$initialized_flag" >> input_from_script.txt
 
-echo Scraping address 1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX
+echo Scraping address $address
 echo With the the initialized flag equal to $initialized_flag. 
 echo Please wait: 
 echo
