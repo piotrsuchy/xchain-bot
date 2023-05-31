@@ -36,5 +36,4 @@ I also added a module that lets you plot data about a specific asset. That inclu
 ## Useful links to get more information about the blockchain and XCP
 
 - [xchain.io - blockchain main page](https://xchain.io/)
-- [dankset.io - asset art page](https://dankset.io/)
 - [blockchain.com - bitcoin chain explorer](https://www.blockchain.com/explorer)
