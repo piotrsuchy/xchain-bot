@@ -23,7 +23,7 @@ echo With the the initialized flag equal to $initialized_flag.
 echo Please wait: 
 echo
 
-python main.py < input_from_script.txt
+python3 main.py < input_from_script.txt
 
 cd csv_files
 column -s, -t < asset_dispenses_1DRZVQe58Tr9WxDNYdJUbye3toH1zkedX.csv | less -N -S
