@@ -1,5 +1,9 @@
 # Project Description
 
+## Update
+This project is being rewritten in Go in my free time so check the go_xchain branch if you're interested. Work has only just started but I'm curious to see how it will handle parsing and having no numpy :).
+
+
 This project is a simple terminal app (with some bash scripts) that based on input will give you information from the [xchain.io](https://xchain.io) blockchain - Counterparty Blockchain (XCP token). As someone who used that blockchain and website I've found the tools to find certain information not sufficient so I decided to code something up to remedy it.
 
 I've focused on dispenses from a certain address. By entering the address you will get a .csv file that contains most of the interesting information (will be customizable in the future) about the dispense. Some more work is needed to clean the data and perhaps visualise the trends for specific assets, but at the very least the program is working. I recommend using the scripts in /scripts folder for the best experience. Second command below might be necessary to change the permissions right after downloading from the repo. This sets the execute permission bit (x) for the owner (u - skip this if you want to set the execute permission for all users) of the file. Run them by:
