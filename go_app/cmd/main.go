@@ -22,11 +22,12 @@ func main() {
 	fmt.Println("Unique Asset Names:", uniqueAssetNames)
 
 	var allDispenses []internal.DispenseData
+	maxRetries := 3 // Example: maximum of 3 retries
 	for _, asset := range uniqueAssetNames {
 		log.Printf("Fetching dispenses for asset %s", asset)
-		dispenses, err := internal.GetDispensesByAsset(asset)
+		dispenses, err := internal.GetDispensesByAssetWithRetry(asset, maxRetries)
 		if err != nil {
-			log.Printf("Error fetching dispenses for asset %s: %v", asset, err)
+			log.Printf("Error fetching dispenses for asset %s after retries: %v", asset, err)
 			continue
 		}
 		allDispenses = append(allDispenses, dispenses...)
